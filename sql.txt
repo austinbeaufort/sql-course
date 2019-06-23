@@ -1,0 +1,98 @@
+DATA FOR THIS PROJECT IS IN DATA TXT FILE
+(USING TXT FILES TO SHOW NOTES AND EXERCISES, USING MYSQL WORKBENCH FOR ACTUAL QUERYING PRACTICE ON THIS COURSE)
+
+
+USE sql_store;
+
+SELECT * 
+FROM customers
+-- WHERE customer_id = 1
+-- ORDER BY first_name
+
+
+// SELECT CLAUSE
+
+SELECT 
+	last_name, 
+    first_name, 
+    points, 
+    (points + 10) * 100 AS 'discount factor'
+FROM customers
+
+
+// REMOVE DUPLICATES
+
+SELECT DISTINCT state
+FROM customers
+
+
+
+
+// EXERCISE 1
+// QUERYING PRODUCTS IN THE sql_store
+
+USE sql_store;
+
+SELECT 
+	name,
+    unit_price,
+    unit_price * 1.1 AS 'new price'
+FROM products
+
+
+
+// WHERE CLAUSE
+SELECT * 
+FROM Customers
+WHERE points > 3000;
+
+
+SELECT * 
+FROM Customers
+WHERE birth_date > '1990-01-01'
+
+
+// CONDITIONAL OPERATORS
+
+SELECT * 
+FROM customers
+WHERE birth_date > '1990-01-01' AND points > 1000
+
+SELECT * 
+FROM customers
+WHERE birth_date > '1990-01-01' OR 
+	(points > 1000 AND state = 'VA')
+
+
+// IN AND BETWEEN OPERATORS
+SELECT * 
+FROM products
+WHERE quantity_in_stock IN (49, 38, 72)
+
+SELECT * 
+FROM customers
+WHERE points BETWEEN 1000 AND 3000
+
+SELECT * 
+FROM customers
+WHERE birth_date BETWEEN '1990-01-01' AND '2000-01-01'
+
+
+LIKE OPERATORS
+SELECT * 
+FROM customers
+WHERE last_name LIKE 'b%'
+
+% any number of characters
+_ exact number of characters
+
+
+EXERCISE
+
+SELECT * 
+FROM customers
+WHERE address LIKE '%TRAIL%' OR address LIKE '%AVENUE%';
+
+SELECT * 
+FROM customers
+WHERE phone LIKE '%9';
