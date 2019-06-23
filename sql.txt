@@ -201,3 +201,265 @@ LIMIT 3
 
 
 INNER JOINS
+
+SELECT order_id, o.customer_id, first_name, last_name
+FROM orders o
+JOIN customers c
+	ON o.customer_id = c.customer_id
+
+
+SELECT order_id, order_items.product_id, quantity, order_items.unit_price
+FROM order_items 
+JOIN products
+	ON order_items.product_id = products.product_id
+
+
+
+JOINING ACROSS DATABASES
+SELECT * 
+FROM order_items oi
+JOIN sql_inventory.products p
+	ON oi.product_id = p.product_id
+
+
+
+SELF JOINS
+
+USE sql_hr;
+
+SELECT 
+	e.employee_id,
+    e.first_name,
+    m.first_name AS manager
+FROM employees e
+JOIN employees m
+	ON e.reports_to = m.employee_id
+
+
+
+
+JOINING MULTIPLE TABLES
+
+USE sql_store;
+
+SELECT 
+	o.order_id,
+    o.order_date,
+    c.first_name,
+    c.last_name,
+    os.name AS status
+FROM orders o
+JOIN customers c
+	ON o.customer_id = c.customer_id
+JOIN order_statuses os
+	ON o.status = os.order_status_id
+
+
+
+COMPOUND JOIN CONDITIONS
+
+SELECT *
+FROM order_items oi
+JOIN order_item_notes oin
+	ON oi.order_id = oin.order_id
+	AND oi.product_id = oin.product_id
+
+
+
+IMPLICIT JOIN SYNTAX
+
+SELECT *
+FROM order o
+JOIN customers c
+	ON o.customer_id = c.customer_id
+
+^^^^ is the same as below
+SELECT *
+FROM orders o, customers c
+WHERE o.customer_id = c.customer_id
+
+
+
+OUTER JOINS
+
+SELECT   -- joining customers who do not have an order with those who do have an order
+	c.customer_id,
+    c.first_name,
+    o.order_id
+FROM customers c
+LEFT JOIN orders o
+	ON c.customer_id = o.customer_id
+ORDER BY c.customer_id
+
+
+SELECT
+	p.product_id,
+    p.name,
+    oi.quantity
+FROM products p
+LEFT JOIN order_items oi
+	ON p.product_id = oi.product_id
+
+
+USING CLAUSE
+
+SELECT
+	o.order_id,
+    c.first_name,
+    sh.name AS shipper
+FROM orders o
+JOIN customers c
+	USING (customer_id)
+LEFT JOIN shippers sh
+	USING (shipper_id)
+
+
+
+NATURAL JOINS
+
+SELECT
+    o.order_id,
+    c.first_name
+FROM orders o
+NATURAL JOIN customers c
+
+
+CROSS JOINS -- joining all columns from multiple tables.
+
+SELECT
+	c.first_name AS customer,
+    p.name AS product
+FROM customers c
+CROSS JOIN products p
+ORDER BY c.first_name
+
+
+
+UNIONS 
+
+SELECT 
+	order_id,
+    order_date,
+    'Active' AS status
+FROM orders
+WHERE order_date >= '2019-01-01'
+UNION
+SELECT 
+	order_id,
+    order_date,
+    'Archived' AS status
+FROM orders
+WHERE order_date < '2019-01-01';
+
+
+SELECT first_name
+FROM customers
+UNION
+SELECT name
+FROM shippers
+
+
+
+COLUMN ATTRIBUTES
+
+
+INSERTING A ROW
+
+INSERT INTO customers (
+	first_name, 
+    last_name, 
+    birth_date, 
+    address, 
+    city, 
+    state)
+VALUES (
+    'John', 
+    'Smith', 
+    '1990-01-01',
+    'address',
+    'city',
+    'CA')
+
+
+INSERTING MULTIPLE ROWS
+
+INSERT INTO shippers(name)
+VALUES ('Shipper1'),
+	   ('Shipper2'),
+       ('Shipper3')
+
+
+INSERT 3 ROWS INTO THE PRODUCTS TABLE
+
+INSERT INTO products (
+	name,
+	quantity_in_stock,
+    unit_price)
+VALUES ('Product1', 10, 1.95),
+		('Product2', 11, 1.95),
+		('Product3', 12, 1.95)
+
+
+
+INSERTING DATA INTO MUTLIPLE TABLES
+
+INSERT INTO orders (customer_id, order_date, status)
+VALUES (1, '2019-01-02', 1);
+
+INSERT INTO order_items
+VALUES
+	(LAST_INSERT_ID(), 1, 1, 2.95),
+	(LAST_INSERT_ID(), 2, 1, 3.95)
+
+
+
+COPYING DATA FROM TABLE TO TABLE
+
+CREATE TABLE orders_archived AS 
+SELECT * FROM orders
+
+
+INSERT INTO orders_archived
+SELECT *
+FROM orders
+WHERE order_date < '2019-01-01'
+
+
+use sql_invoicing;
+
+CREATE TABLE invoices_archived AS
+SELECT 
+	i.invoice_id,
+    i.number,
+    c.name As client,
+    i.invoice_total,
+    i.payment_total,
+    i.invoice_date,
+    i.payment_date,
+    i.due_date
+FROM invoices i
+JOIN clients c
+	USING (client_id)
+WHERE payment_date IS NOT NULL
+
+
+
+
+UPDATING DATA
+
+UPDATE invoices
+SET payment_total = 10, payment_date = '2019-03-01'
+WHERE invoice_id = 1;
+
+
+
+DELETING ROWS
+
+DELETE FROM invoices
+WHERE invoice_id = 1
+
+DELETE FROM invoices
+WHERE client_id = (
+SELECT *
+FROM clients
+WHERE name = 'Myworks')
