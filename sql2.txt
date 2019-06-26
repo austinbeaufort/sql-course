@@ -1,0 +1,4 @@
+Types of Primary Keys
+
+Surrogate Keys: Have no relation to anything in the "real world," 
+but uniquely identify a particular row in the database.
