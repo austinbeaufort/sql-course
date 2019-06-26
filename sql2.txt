@@ -1,4 +1,24 @@
+//// Free Code Camp Relational Databases...
+//// SQL / mySQL beginner exercises and lessons tutorial
+
 Types of Primary Keys
 
 Surrogate Keys: Have no relation to anything in the "real world," 
-but uniquely identify a particular row in the database.
+but uniquely identify a particular row in the database.`
+
+Natural Keys: Have a relation to the "real world" and uniquely 
+identify a row within the database. Example might be a SSN.
+
+Foreign Keys: Attribute that can be stored in a database
+table to link it to another database table. A Foreign Keys
+in one table is a Primary Key in a different table. 
+A table can have more than one foreign branch.
+
+Composite Key: Has two attributes (columns) that will uniquely
+identify each row in the table.
+
+SQL is a hybrid language.
+-- Data Query Language
+-- Data Definition Language
+-- Data Control Language
+-- Data Manipulation Language
